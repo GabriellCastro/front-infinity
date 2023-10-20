@@ -34,8 +34,6 @@ $ cd front-infinity
 # Run yarn to install dependencies
 $ yarn
 
-# Change file name .env.example for .env.local
-
 # To start the application
 $ yarn dev
 
