@@ -50,7 +50,6 @@ const Login: FC = () => {
     e?.preventDefault();
     try {
       const { data: response } = await api.post("/auth/login", data);
-      console.log(response);
       setCookie(null, "token", response.data.token);
       setUser(response.data.user);
       router.push("/");

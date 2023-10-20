@@ -5,6 +5,7 @@ import {
   InputGroup,
   InputLeftElement,
   InputProps,
+  TextareaProps,
   Input as ChakraInput,
   InputRightElement,
   FormErrorMessage,

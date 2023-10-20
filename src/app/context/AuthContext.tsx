@@ -10,6 +10,12 @@ interface IAuthContext {
   user: User;
   setUser: (user: User) => void;
   signOut: () => void;
+  loadTasks: () => void;
+  tasks: any;
+  tasksToDo: any;
+  tasksInProgress: any;
+  tasksReview: any;
+  tasksDone: any;
 }
 
 interface IAuthProvider {
@@ -20,7 +26,15 @@ export const AuthContext = createContext({} as IAuthContext);
 
 export const AuthProvider: FC<IAuthProvider> = ({ children }) => {
   const [user, setUser] = useState<User>({} as User);
+  const [tasks, setTasks] = useState([] as any);
   const router = useRouter();
+
+  const tasksToDo = tasks.filter((task: any) => task.status === "TODO");
+  const tasksInProgress = tasks.filter(
+    (task: any) => task.status === "IN_PROGRESS"
+  );
+  const tasksReview = tasks.filter((task: any) => task.status === "REVIEW");
+  const tasksDone = tasks.filter((task: any) => task.status === "DONE");
 
   useEffect(() => {
     const { token } = parseCookies();
@@ -31,8 +45,8 @@ export const AuthProvider: FC<IAuthProvider> = ({ children }) => {
             Authorization: `Bearer ${token}`,
           },
         })
-        .then((response) => {
-          setUser(response.data);
+        .then(({ data }) => {
+          setUser(data.data);
         })
         .catch((error: any) => {
           console.log(error.response);
@@ -43,6 +57,24 @@ export const AuthProvider: FC<IAuthProvider> = ({ children }) => {
     // eslint-disable-next-line
   }, []);
 
+  const loadTasks = () => {
+    if (user) {
+      api
+        .get(`/tasks/all/${user.id}`)
+        .then(({ data }) => {
+          setTasks(data.data);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    }
+  };
+
+  useEffect(() => {
+    loadTasks();
+    // eslint-disable-next-line
+  }, [user]);
+
   const signOut = () => {
     destroyCookie(null, "token");
     setUser({} as User);
@@ -50,7 +82,19 @@ export const AuthProvider: FC<IAuthProvider> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, signOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        signOut,
+        loadTasks,
+        tasks,
+        tasksToDo,
+        tasksDone,
+        tasksInProgress,
+        tasksReview,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
