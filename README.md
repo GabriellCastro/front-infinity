@@ -1,5 +1,5 @@
 <h1 align="center">
-  Adx Full Commerce - This is a challenge by Adx
+  Infinity - This is a challenge by Infinity
 </h1>
 
 <p align="center">
