@@ -1,95 +1,59 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+
+import { useContext } from "react";
+import Header from "./components/Header";
+import ButtonLabel from "./components/ButtonLabel";
+import { Flex } from "@chakra-ui/react";
+import { ModalCreateTaskAndUpdate } from "./components/ModalCreateTaskAndUpdate";
+import { useDisclosure } from "@chakra-ui/react";
+import { AuthContext } from "./context/AuthContext";
 
 export default function Home() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { tasksDone, tasksInProgress, tasksReview, tasksToDo } =
+    useContext(AuthContext);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+    <>
+      <ModalCreateTaskAndUpdate isOpen={isOpen} onClose={onClose} />
+      <Header />
+      <Flex
+        px={["6", "8"]}
+        py={["6", "8"]}
+        gap={10}
+        flexWrap={"wrap"}
+        justifyContent={"center"}
+      >
+        <ButtonLabel
+          label="TO DO"
+          lenght={tasksToDo.length}
+          action={() => onOpen()}
+          labelColor={"brand.primary.600"}
+          arrayTask={tasksToDo}
         />
-      </div>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+        <ButtonLabel
+          label="IN PROGRESS"
+          lenght={tasksInProgress.length}
+          action={() => onOpen()}
+          labelColor={"brand.orange.500"}
+          arrayTask={tasksInProgress}
+        />
+        <ButtonLabel
+          label="REVIEW"
+          lenght={tasksReview.length}
+          action={() => onOpen()}
+          labelColor={"purple.600"}
+          arrayTask={tasksReview}
+        />
+        <ButtonLabel
+          label="DONE"
+          lenght={tasksDone.length}
+          action={() => onOpen()}
+          labelColor={"brand.green.400"}
+          arrayTask={tasksDone}
+        />
+      </Flex>
+    </>
+  );
 }
